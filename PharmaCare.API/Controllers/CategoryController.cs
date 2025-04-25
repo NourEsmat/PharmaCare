@@ -1,16 +1,17 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using PharmaCare.API.Helper;
 using PharmaCare.Core.DTO;
 using PharmaCare.Core.Entites.Products;
 using PharmaCare.Core.Interfaces;
 
 namespace PharmaCare.API.Controllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
+    
     public class CategoryController : BaseController
     {
-        public CategoryController(IUnitOfWork uow) : base(uow) { }
+        public CategoryController(IUnitOfWork uow,IMapper mapper) : base(uow,mapper) { }
 
         [HttpGet("get-all")]
         public async Task<IActionResult> GetAllCategories()
@@ -18,7 +19,7 @@ namespace PharmaCare.API.Controllers
             try
             {
                 var categories = await uow.categoryRepository.GetAllAsync();
-                if (categories == null)
+                if (categories.Count < 1)
                     return NotFound();
                 return Ok(categories);
             }
@@ -35,7 +36,7 @@ namespace PharmaCare.API.Controllers
             {
                 var category = await uow.categoryRepository.GetByIdAsync(id);
                 if (category == null)
-                    return NotFound("No category was found");
+                    return NotFound(new ResponseAPI(404, $"no category was found with id : {id}"));
                 return Ok(category);
             }
             catch (Exception ex)
@@ -49,13 +50,9 @@ namespace PharmaCare.API.Controllers
         {
             try
             {
-                var category = new Category
-                {
-                    name = categoryDTO.name,
-                    description = categoryDTO.description
-                };
+                var category = mapper.Map<Category>(categoryDTO);
                 await uow.categoryRepository.AddAsync(category);
-                return Ok(category);
+                return Ok(new ResponseAPI (200 , "Item has been added succefuly"));
             }
             catch (Exception ex)
             {
@@ -69,12 +66,15 @@ namespace PharmaCare.API.Controllers
             try
             {
                 var category = await uow.categoryRepository.GetByIdAsync(id);
+
                 if (category == null)
-                    return NotFound("No category was found");
-                category.name = categoryDTO.name;
-                category.description = categoryDTO.description;
+                    return NotFound(new ResponseAPI(404, $"no category was found with id : {id}"));
+
+                mapper.Map(categoryDTO,category);
+
                 await uow.categoryRepository.UpdateAsync(category);
-                return Ok(category);
+
+                return Ok(new ResponseAPI(200, "Item has been updated succefuly"));
             }
             catch (Exception ex)
             {
@@ -87,8 +87,13 @@ namespace PharmaCare.API.Controllers
         {
             try
             {
+                var category = await uow.categoryRepository.GetByIdAsync(id);
+
+                if (category == null)
+                    return NotFound(new ResponseAPI(404, $"no category was found with id : {id}"));
+
                 await uow.categoryRepository.DeleteAsync(id);
-                return Ok("Category deleted successfully");
+                return Ok(new ResponseAPI(200, "Item has been deleted succefuly"));
             }
             catch (Exception ex)
             {
