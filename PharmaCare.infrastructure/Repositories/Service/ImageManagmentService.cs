@@ -30,7 +30,7 @@ namespace PharmaCare.infrastructure.Repositories.Service
             {
                 if (file.Length > 0)
                 {
-                    var fileName = file.FileName;
+                    var fileName = folderName+Guid.NewGuid().ToString();
                     var fileSrc = $"images/{folderName}/{fileName}";
                     var filePath = Path.Combine(filedirectory, fileName);
                     using (FileStream stream = new FileStream(filePath, FileMode.Create))
