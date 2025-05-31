@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PharmaCare.infrastructure.Data;
 
@@ -10,9 +11,11 @@ using PharmaCare.infrastructure.Data;
 namespace PharmaCare.infrastructure.Data.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250503143308_photoseed")]
+    partial class photoseed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -89,12 +92,6 @@ namespace PharmaCare.infrastructure.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
-                    b.Property<decimal>("NewPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("OldPrice")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<int>("categoryId")
                         .HasColumnType("int");
 
@@ -106,6 +103,9 @@ namespace PharmaCare.infrastructure.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<decimal>("price")
+                        .HasColumnType("decimal(18,2)");
+
                     b.HasKey("ID");
 
                     b.HasIndex("categoryId");
@@ -116,11 +116,10 @@ namespace PharmaCare.infrastructure.Data.Migrations
                         new
                         {
                             ID = 3,
-                            NewPrice = 12m,
-                            OldPrice = 0m,
                             categoryId = 3,
                             description = "test description",
-                            name = "test name"
+                            name = "test name",
+                            price = 12m
                         });
                 });
 

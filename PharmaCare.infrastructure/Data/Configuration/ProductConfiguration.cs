@@ -16,9 +16,9 @@ namespace PharmaCare.infrastructure.Data.Configuration
             
             builder.Property(p=>p.name).IsRequired();
             builder.Property(p=>p.description).IsRequired();
-            builder.Property(p=>p.price).IsRequired().HasColumnType("decimal(18,2)");
+            builder.Property(p=>p.NewPrice).IsRequired().HasColumnType("decimal(18,2)");
             builder.HasData(
-                new Product { name = "test name", ID = 1 ,price = 12,categoryId=1,description="test description"}
+                new Product { name = "test name", ID = 3 ,NewPrice = 12,categoryId=3,description="test description"}
                 );
         }
     }

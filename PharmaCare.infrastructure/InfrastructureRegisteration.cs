@@ -6,10 +6,13 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using PharmaCare.Core;
 using PharmaCare.Core.Interfaces;
+using PharmaCare.Core.Services;
 using PharmaCare.infrastructure.Data;
 using PharmaCare.infrastructure.Repositories;
+using PharmaCare.infrastructure.Repositories.Service;
 
 namespace PharmaCare.infrastructure
 {
@@ -19,7 +22,14 @@ namespace PharmaCare.infrastructure
         {
 
             services.AddScoped(typeof(IGenericRepository<>),typeof(GenericRepository<>));
+
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            services.AddSingleton<IImageManagmentService, ImageManagmentService>();
+
+            services.AddSingleton<IFileProvider>(new PhysicalFileProvider
+                (Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
+
             services.AddDbContext<AppDBContext>(option =>
             {
                 option.UseSqlServer(configuration.GetConnectionString("PharmaCareDB"));

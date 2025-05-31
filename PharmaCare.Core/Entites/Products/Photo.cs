@@ -11,7 +11,7 @@ namespace PharmaCare.Core.Entites.Products
     {
         public string ImageName { get; set; }
         public int productId { get; set; }
-        [ForeignKey(nameof(productId))]
-        public virtual Product Product { get; set; }
+        //[ForeignKey(nameof(productId))]
+        //public virtual Product Product { get; set; }
     }
 }
